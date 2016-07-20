@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Gamelogic.Grids;
+using UnityEngine.Networking;
 
-public class Startup : MonoBehaviour {
+public class Startup : NetworkBehaviour {
 
     [SerializeField]
-    private FarAndWide.FWGrid fwGrid;
+    private ServerGridBuilder gridBuilder;
+
+    [SerializeField]
+    private Gameplay gameplay;
 
     [SerializeField]
     private GameObject playerPrefab;
@@ -13,18 +17,22 @@ public class Startup : MonoBehaviour {
     [SerializeField]
     private GameObject headPrefab;
 
-	// Use this for initialization
-	void Start () {
-        SpriteCell[] corners = fwGrid.getCorners();
+    public void StartGame() {
+        gridBuilder.BuildGrid();
 
-        GameObject.Instantiate(playerPrefab, corners[0].Center, Quaternion.identity);
-        GameObject.Instantiate(playerPrefab, corners[1].Center, Quaternion.identity);
-        GameObject.Instantiate(headPrefab, corners[2].Center, Quaternion.identity);
-        GameObject.Instantiate(headPrefab, corners[3].Center, Quaternion.identity);
-	}
+        Cell[] corners = gridBuilder.getCorners();
+
+        Cell[] magicTiles = gridBuilder.GetMagicTiles();
+
+        gameplay.setPlayerObjects(
+            (GameObject) GameObject.Instantiate(playerPrefab, corners[0].Center, Quaternion.identity), 
+            (GameObject) GameObject.Instantiate(headPrefab, corners[2].Center, Quaternion.identity),
+            (GameObject) GameObject.Instantiate(playerPrefab, corners[1].Center, Quaternion.identity),
+            (GameObject) GameObject.Instantiate(headPrefab, corners[3].Center, Quaternion.identity));
+
+        foreach (Cell cell in magicTiles) {
+            cell.SetIsMagic(true);
+        }
+    }
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
