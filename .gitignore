@@ -29,3 +29,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+.idea/.idea.Far&Wide/riderModule.iml
+.idea/.idea.Far&Wide/.idea/contentModel.xml
+.idea/.idea.Far&Wide/.idea/modules.xml
+.idea/.idea.Far&Wide/.idea/vcs.xml
+.idea/.idea.Far&Wide/.idea/workspace.xml

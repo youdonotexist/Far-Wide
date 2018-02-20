@@ -29,7 +29,7 @@ public class ServerGridBuilder : NetworkBehaviour
 	public void BuildGrid()
 	{
 		// Creates a grid in a rectangular shape.
-        grid = RectGrid<Cell>.Rectangle(6, 6);
+        grid = RectGrid<Cell>.Rectangle(7, 7);
 
 		// Creates a map...
         map = new RectMap(cellPrefab.Dimensions) // The cell dimensions usually correspond to the visual 
@@ -79,6 +79,13 @@ public class ServerGridBuilder : NetworkBehaviour
         return cells;
     }
 
+    public Cell GetCenterCell() {
+        int centerX = Mathf.FloorToInt((float)grid.Width * 0.5f);
+        int centerY = Mathf.FloorToInt((float)grid.Height * 0.5f);
+
+        return grid.GetCell(new RectPoint(centerX, centerY));
+    }
+
     public Cell GetCell(Vector3 current, Vector2 direction) {
         // Calculates the grid point that corresponds to the given world coordinate.
         RectPoint point = map[current];
@@ -91,5 +98,11 @@ public class ServerGridBuilder : NetworkBehaviour
         }
 
         return null;
+    }
+
+    public Cell GetCell(Vector3 current) {
+        // Calculates the grid point that corresponds to the given world coordinate.
+        RectPoint point = map[current];
+        return grid.GetCell(point);
     }
 }

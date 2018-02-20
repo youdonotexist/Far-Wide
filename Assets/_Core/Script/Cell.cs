@@ -11,14 +11,14 @@ public class Cell : NetworkBehaviour, IGLScriptableObject {
     [SerializeField]
     private Sprite magicSprite;
 
-    [SyncVar(hook="SetHighlight")][SerializeField] 
-    private bool highlightOn;
+    [SerializeField]
+    private Sprite phantomSwitchSprite;
 
     [SyncVar(hook="SetColor")][SerializeField] 
-    private Color color;
+    private Color color = Color.white;
 
-    [SyncVar] 
-    private bool isMagic;
+    [SyncVar(hook="SetTileType")] 
+    private TileType tileType;
 
     [SerializeField]
     private Vector3 centerOffset = Vector3.zero;
@@ -56,23 +56,11 @@ public class Cell : NetworkBehaviour, IGLScriptableObject {
                 spriteRenderer = GetComponent<SpriteRenderer>();
             }
                 
-            if (spriteRenderer == null)
-            {
+            if (spriteRenderer == null) {
                 Debug.LogError("The cell needs a child with a SpriteRenderer component attached");
             }
 
             return spriteRenderer;
-        }
-    }
-
-    public bool HighlightOn
-    {
-        get { return highlightOn; }
-
-        set
-        {
-            highlightOn = value;
-            __UpdatePresentation(true);
         }
     }
 
@@ -98,22 +86,38 @@ public class Cell : NetworkBehaviour, IGLScriptableObject {
 
     public void __UpdatePresentation(bool forceUpdate)
     {
-        SpriteRenderer.color = highlightOn ? Color.Lerp(color, Color.white, 0.8f) : color;
+        switch(tileType) {
+        case TileType.BASIC: 
+            SpriteRenderer.color = Color.white;
+            SpriteRenderer.sprite = normalSprite;
+            break;
+        case TileType.MAGIC:
+            SpriteRenderer.color = Color.white;
+            SpriteRenderer.sprite = magicSprite;
+            break;
+        case TileType.PHANTOM:
+            SpriteRenderer.color = Color.white; //TODO colorize for currently targeted player
+            SpriteRenderer.sprite = phantomSwitchSprite;
+            break;
+        }   
     }
 
     private void SetColor(Color c) {
         Color = c;
     }
 
-    private void SetHighlight(bool onHighlight) {
-        HighlightOn = onHighlight;
+    public void SetTileType(TileType type) {
+        tileType = type;
+        __UpdatePresentation(true);
     }
 
-    private void Update() {
-        SpriteRenderer.sprite = isMagic ? magicSprite : normalSprite;
+    public TileType GetTileType() {
+        return tileType;
     }
 
-    public void SetIsMagic(bool magic) {
-        isMagic = magic;
-    }
+    public enum TileType {
+        BASIC,
+        MAGIC,
+        PHANTOM
+    };
 }

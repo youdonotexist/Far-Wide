@@ -32,4 +32,8 @@ public class Gameplay : NetworkBehaviour {
         NetworkServer.Spawn(player2body);
         NetworkServer.Spawn(player2head);
     }
+
+    public void StartPhase() {
+        NetworkServer.SendToAll
+    }
 }

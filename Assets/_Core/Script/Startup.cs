@@ -17,6 +17,9 @@ public class Startup : NetworkBehaviour {
     [SerializeField]
     private GameObject headPrefab;
 
+    [SerializeField]
+    private GameObject phantomPrefab;
+
     public void StartGame() {
         gridBuilder.BuildGrid();
 
@@ -31,8 +34,14 @@ public class Startup : NetworkBehaviour {
             (GameObject) GameObject.Instantiate(headPrefab, corners[3].Center, Quaternion.identity));
 
         foreach (Cell cell in magicTiles) {
-            cell.SetIsMagic(true);
+            cell.SetTileType(Cell.TileType.MAGIC);
         }
+
+        gridBuilder.GetCenterCell().SetTileType(Cell.TileType.PHANTOM);
+
+        gameplay.StartPhase();
+
+        //Network.Instantiate(GameObject.Instantiate(phantomPrefab, gridBuilder.GetCenterCell(), Quaternion.identity) as GameObject);
     }
 	
 }

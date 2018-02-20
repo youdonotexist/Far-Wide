@@ -1,10 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Head : MonoBehaviour {
+public class Head : NetworkBehaviour {
 
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    [SyncVar] private Vector3 position;
+
+    public void SetPosition(Vector3 pos) {
+        position = pos;
+    }
+
+    void Start() {
+        position = transform.position;
+    }
+
+    void Update() {
+        transform.position = position;
+    }
 }
